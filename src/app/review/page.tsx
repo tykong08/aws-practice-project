@@ -131,10 +131,10 @@ export default function ReviewPage() {
 
     const toggleAllDates = () => {
         if (!groupByDate || !groupedAttempts) return;
-        
+
         const allDates = Array.from(groupedAttempts.keys());
         const allExpanded = allDates.every(date => expandedDates.has(date));
-        
+
         if (allExpanded) {
             // 모두 접기
             setExpandedDates(new Set());
@@ -483,7 +483,7 @@ export default function ReviewPage() {
                             <div className="space-y-4">
                                 {Array.from(groupedAttempts!.entries()).map(([date, attempts]) => (
                                     <div key={date} className="border border-gray-200 rounded-lg overflow-hidden">
-                                        <div 
+                                        <div
                                             className="flex items-center gap-2 p-4 bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors"
                                             onClick={() => toggleDate(date)}
                                         >
