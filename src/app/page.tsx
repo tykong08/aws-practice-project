@@ -1,103 +1,159 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { BookOpen, Target, LogOut, User } from 'lucide-react';
+
+interface User {
+  id: string;
+  username: string;
+  name: string;
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    } else {
+      router.push('/login');
+    }
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    router.push('/login');
+  };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-gray-600">로딩 중...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <header className="flex justify-between items-center mb-12">
+          <div className="text-center flex-1">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              AWS SAA-C03 연습 사이트
+            </h1>
+            <p className="text-xl text-gray-600">
+              AWS Solutions Architect Associate 시험을 위한 문제 연습과 복습
+            </p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 text-gray-700">
+              <User className="h-5 w-5" />
+              <span>{user.name}</span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="text-gray-700 border-gray-300"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              로그아웃
+            </Button>
+          </div>
+        </header>
+
+        {/* Dark Mode Notice */}
+        <div className="mb-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-yellow-800">
+                    <strong>알림:</strong> 더 나은 사용 경험을 위해 브라우저의 어두운 모드(다크 모드)를 해제해 주세요. 이 사이트는 밝은 테마에 최적화되어 있습니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Main Action Cards */}
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="border border-gray-200 hover:shadow-lg transition-shadow">
+              <CardHeader className="text-center pb-4">
+                <BookOpen className="h-16 w-16 text-blue-600 mx-auto mb-4" />
+                <CardTitle className="text-2xl text-gray-900">문제 연습</CardTitle>
+                <CardDescription className="text-gray-600 text-base">
+                  AWS SAA-C03 시험 문제를 연습하고 실력을 테스트하세요
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-center">
+                <Link href="/practice">
+                  <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    문제 연습 시작하기
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 hover:shadow-lg transition-shadow">
+              <CardHeader className="text-center pb-4">
+                <Target className="h-16 w-16 text-orange-600 mx-auto mb-4" />
+                <CardTitle className="text-2xl text-gray-900">틀린 문제 복습</CardTitle>
+                <CardDescription className="text-gray-600 text-base">
+                  이전에 틀린 문제들을 모아서 효율적으로 복습하세요
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-center">
+                <Link href="/review">
+                  <Button size="lg" className="w-full bg-orange-600 hover:bg-orange-700 text-white">
+                    틀린 문제 복습하기
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 hover:shadow-lg transition-shadow bg-gradient-to-br from-purple-50 to-indigo-50">
+              <CardHeader className="text-center pb-4">
+                <div className="h-16 w-16 bg-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <CardTitle className="text-2xl text-gray-900">모의시험</CardTitle>
+                <CardDescription className="text-gray-600 text-base">
+                  실제 시험 환경과 동일한 65문제 모의시험에 도전하세요
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-center">
+                <Link href="/test">
+                  <Button size="lg" className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                    모의시험 시작하기
+                  </Button>
+                </Link>
+                <p className="text-xs text-gray-500 mt-2">
+                  실제 시험과 동일한 65문제 • 정답 즉시 확인 불가
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+
+        </div>
+      </div>
     </div>
   );
 }
