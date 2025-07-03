@@ -89,10 +89,20 @@ export default function PracticePage() {
         if (showResult) return;
 
         setSelectedAnswers(prev => {
+            const maxSelections = currentQuestion?.correctAnswers.length || 1;
+            
             if (prev.includes(optionIndex)) {
+                // 이미 선택된 답안을 다시 클릭하면 선택 해제
                 return prev.filter(ans => ans !== optionIndex);
             } else {
-                return [...prev, optionIndex];
+                // 새로운 답안 선택
+                if (prev.length >= maxSelections) {
+                    // 정답 개수만큼 이미 선택했으면 가장 오래된 선택을 제거하고 새로운 선택 추가
+                    return [...prev.slice(1), optionIndex];
+                } else {
+                    // 정답 개수보다 적게 선택했으면 추가
+                    return [...prev, optionIndex];
+                }
             }
         });
     };
@@ -351,6 +361,13 @@ export default function PracticePage() {
                             <CardDescription className="text-base text-gray-800 leading-relaxed">
                                 {currentQuestion.question}
                             </CardDescription>
+                            {/* 선택 안내 메시지 */}
+                            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <p className="text-sm text-blue-800">
+                                    <strong>{currentQuestion.correctAnswers.length}개의 정답</strong>을 선택하세요. 
+                                    {selectedAnswers.length}/{currentQuestion.correctAnswers.length} 선택됨
+                                </p>
+                            </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {/* Options */}

@@ -45,7 +45,7 @@ export default function ReviewPage() {
     const [expandedQuestions, setExpandedQuestions] = useState<Set<string>>(new Set());
     const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
     const [loadingExplanations, setLoadingExplanations] = useState<Set<string>>(new Set());
-    const [groupByDate, setGroupByDate] = useState(false);
+    const [groupByDate, setGroupByDate] = useState(true);
     const [clearingAttempts, setClearingAttempts] = useState(false);
 
     // Helper function to get available options for a question
@@ -89,16 +89,11 @@ export default function ReviewPage() {
         }
     }, [user, fetchIncorrectAttempts]);
 
-    // 날짜별 보기 활성화 시 최신 날짜를 자동으로 펼치기
+    // 날짜별 보기 활성화 시 모든 날짜를 접힌 상태로 초기화
     useEffect(() => {
-        if (groupByDate && incorrectAttempts.length > 0) {
-            const groupedAttempts = groupAttemptsByDate(incorrectAttempts);
-            const dates = Array.from(groupedAttempts.keys());
-            if (dates.length > 0) {
-                // 가장 최근 날짜를 펼치기
-                const latestDate = dates[0]; // groupAttemptsByDate는 날짜순으로 정렬되어 있음
-                setExpandedDates(new Set([latestDate]));
-            }
+        if (groupByDate) {
+            // 날짜별 보기에서는 모든 날짜를 접힌 상태로 시작
+            setExpandedDates(new Set());
         } else {
             // 날짜별 보기가 비활성화되면 모든 날짜 접기
             setExpandedDates(new Set());

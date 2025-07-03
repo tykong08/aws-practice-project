@@ -9,7 +9,14 @@
     "lint": "next lint",
     "seed": "tsx prisma/seed.ts",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy"
+    "db:migrate": "prisma migrate deploy",
+    "db:stats": "tsx scripts/db-manager.ts stats",
+    "db:search": "tsx scripts/db-manager.ts search",
+    "db:duplicates": "tsx scripts/db-manager.ts duplicates",
+    "db:remove-duplicates": "tsx scripts/db-manager.ts remove-duplicates",
+    "db:backup": "tsx scripts/db-manager.ts backup",
+    "db:update": "tsx scripts/update-questions.ts",
+    "add-questions": "tsx scripts/add-questions.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.11.0",

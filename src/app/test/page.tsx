@@ -44,6 +44,8 @@ export default function TestPage() {
     const [loading, setLoading] = useState(false);
     const [testStarted, setTestStarted] = useState(false);
     const [startTime, setStartTime] = useState<Date | null>(null);
+    const [timeLeft, setTimeLeft] = useState(130 * 60); // 130분을 초로 변환
+    const [timeExpired, setTimeExpired] = useState(false);
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
@@ -53,6 +55,39 @@ export default function TestPage() {
             router.push('/login');
         }
     }, [router]);
+
+    // 타이머 useEffect
+    useEffect(() => {
+        if (!testStarted || timeExpired) return;
+
+        const timer = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    setTimeExpired(true);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [testStarted, timeExpired]);
+
+    // 시간 만료 시 자동 제출 처리
+    useEffect(() => {
+        if (timeExpired) {
+            finishTest();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [timeExpired]);
+
+    // 시간 포맷팅 함수
+    const formatTime = (seconds: number) => {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    };
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -89,11 +124,24 @@ export default function TestPage() {
     const handleAnswerChange = (optionIndex: number, checked: boolean) => {
         setAnswers(prev => prev.map(answer => {
             if (answer.questionId === currentQuestion.id) {
+                const maxSelections = currentQuestion.correctAnswers.length;
+                
                 if (checked) {
-                    return {
-                        ...answer,
-                        selectedAnswers: [...answer.selectedAnswers, optionIndex].sort()
-                    };
+                    // 새로운 답안 선택
+                    if (answer.selectedAnswers.length >= maxSelections) {
+                        // 정답 개수만큼 이미 선택했으면 가장 오래된 선택을 제거하고 새로운 선택 추가
+                        const newAnswers = [...answer.selectedAnswers.slice(1), optionIndex].sort();
+                        return {
+                            ...answer,
+                            selectedAnswers: newAnswers
+                        };
+                    } else {
+                        // 정답 개수보다 적게 선택했으면 추가
+                        return {
+                            ...answer,
+                            selectedAnswers: [...answer.selectedAnswers, optionIndex].sort()
+                        };
+                    }
                 } else {
                     return {
                         ...answer,
@@ -201,6 +249,8 @@ export default function TestPage() {
                                 <h3 className="font-semibold text-blue-900 mb-2">시험 안내</h3>
                                 <ul className="text-sm text-blue-800 space-y-1">
                                     <li>• 총 65문제로 구성되어 있습니다</li>
+                                    <li>• <strong>시간 제한: 130분 (2시간 10분)</strong></li>
+                                    <li>• 시간이 만료되면 자동으로 시험이 종료됩니다</li>
                                     <li>• 각 문제를 풀고 나서 정답을 즉시 확인할 수 없습니다</li>
                                     <li>• 모든 문제를 완료한 후 점수와 결과를 확인할 수 있습니다</li>
                                     <li>• 시험 중 페이지를 새로고침하면 진행상황이 사라집니다</li>
@@ -242,8 +292,16 @@ export default function TestPage() {
                 <div className="mb-6">
                     <div className="flex justify-between items-center">
                         <h1 className="text-2xl font-bold text-gray-900">AWS SAA-C03 모의시험</h1>
-                        <div className="text-sm text-gray-600">
-                            완료: {answeredCount}/{questions.length}문제
+                        <div className="flex items-center gap-4">
+                            <div className="text-center">
+                                <div className="text-sm text-gray-600">남은 시간</div>
+                                <div className={`text-xl font-mono font-bold ${timeLeft < 1800 ? 'text-red-600' : 'text-blue-600'}`}>
+                                    {formatTime(timeLeft)}
+                                </div>
+                            </div>
+                            <div className="text-sm text-gray-600">
+                                완료: {answeredCount}/{questions.length}문제
+                            </div>
                         </div>
                     </div>
                     <div className="mt-2 bg-gray-200 rounded-full h-2">
@@ -303,6 +361,14 @@ export default function TestPage() {
                                 <p className="text-gray-900 leading-relaxed whitespace-pre-wrap">
                                     {currentQuestion.question}
                                 </p>
+
+                                {/* 선택 안내 메시지 */}
+                                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <p className="text-sm text-blue-800">
+                                        <strong>{currentQuestion.correctAnswers.length}개의 정답</strong>을 선택하세요. 
+                                        {currentAnswer?.selectedAnswers.length || 0}/{currentQuestion.correctAnswers.length} 선택됨
+                                    </p>
+                                </div>
 
                                 <div className="space-y-3">
                                     {getAvailableOptions(currentQuestion).map((option, index) => (
@@ -368,6 +434,18 @@ export default function TestPage() {
                                 <CardTitle className="text-lg">시험 진행상황</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
+                                <div>
+                                    <div className="text-sm text-gray-600 mb-1">남은 시간</div>
+                                    <div className={`text-2xl font-mono font-bold ${timeLeft < 1800 ? 'text-red-600' : 'text-blue-600'}`}>
+                                        {formatTime(timeLeft)}
+                                    </div>
+                                    {timeLeft < 1800 && (
+                                        <div className="text-xs text-red-600 mt-1">
+                                            30분 미만 남았습니다
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div>
                                     <div className="text-sm text-gray-600 mb-1">답변 완료</div>
                                     <div className="text-2xl font-bold text-gray-900">
