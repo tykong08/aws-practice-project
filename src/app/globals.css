@@ -1,283 +1,31 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Base variables */
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 47.4% 11.2%;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
-}
-
-* {
-  border-color: hsl(var(--border));
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-card: #ffffff;
+  --color-card-foreground: #171717;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #171717;
+  --color-primary: #0f172a;
+  --color-primary-foreground: #f8fafc;
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #0f172a;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+  --color-accent: #f1f5f9;
+  --color-accent-foreground: #0f172a;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-input: #e2e8f0;
+  --color-ring: #0f172a;
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-}
-
-/* AI Explanation Button Styles */
-.ai-explanation-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  white-space: nowrap;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-  background-color: #2563eb;
-  color: white;
-  padding: 8px 16px;
-  min-height: 40px;
-  border: none;
-  cursor: pointer;
-}
-
-.ai-explanation-btn:hover {
-  background-color: #1d4ed8;
-  transform: scale(1.05);
-}
-
-.ai-explanation-btn:active {
-  background-color: #1e40af;
-  transform: scale(0.95);
-}
-
-.ai-explanation-btn:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-  transform: none;
-  opacity: 0.5;
-}
-
-/* Navigation Button Styles */
-.nav-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  white-space: nowrap;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-  background-color: #4b5563;
-  color: white;
-  padding: 8px 16px;
-  min-height: 40px;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.nav-btn:hover {
-  background-color: #374151;
-  transform: scale(1.05);
-}
-
-.nav-btn:active {
-  background-color: #1f2937;
-  transform: scale(0.95);
-}
-
-.nav-btn:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-  transform: none;
-  opacity: 0.5;
-}
-
-/* Primary Navigation Button */
-.nav-btn-primary {
-  background-color: #059669;
-}
-
-.nav-btn-primary:hover {
-  background-color: #047857;
-}
-
-.nav-btn-primary:active {
-  background-color: #065f46;
-}
-
-/* Secondary Navigation Button */
-.nav-btn-secondary {
-  background-color: #64748b;
-}
-
-.nav-btn-secondary:hover {
-  background-color: #475569;
-}
-
-.nav-btn-secondary:active {
-  background-color: #334155;
-}
-
-/* Loading State for AI Explanation */
-.ai-explanation-loading {
-  opacity: 0.75;
-  cursor: not-allowed;
-  position: relative;
-}
-
-.ai-explanation-loading::after {
-  content: '';
-  width: 16px;
-  height: 16px;
-  margin-left: 8px;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  display: inline-block;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Custom button styles for AI explanation */
-.explanation-button {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.explanation-button:hover {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.explanation-button:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Navigation button styles */
-.nav-button {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.nav-button:hover {
-  background: linear-gradient(135deg, #059669, #047857);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-}
-
-.nav-button.secondary {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
-}
-
-.nav-button.secondary:hover {
-  background: linear-gradient(135deg, #4b5563, #374151);
-  box-shadow: 0 6px 16px rgba(107, 114, 128, 0.3);
-}
-
-/* AI explanation content styling */
-.ai-explanation {
-  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-  border: 1px solid #0ea5e9;
-  border-radius: 12px;
-  padding: 20px;
-  margin: 16px 0;
-  position: relative;
-}
-
-.ai-explanation::before {
-  content: "🤖 AI 설명";
-  position: absolute;
-  top: -10px;
-  left: 16px;
-  background: #0ea5e9;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.ai-explanation h3 {
-  color: #0369a1;
-  margin-top: 8px;
-  margin-bottom: 12px;
-  font-weight: 600;
-}
-
-.ai-explanation p {
-  color: #374151;
-  line-height: 1.6;
-  margin-bottom: 8px;
-}
-
-.ai-explanation ul {
-  color: #374151;
-  margin-left: 20px;
-  line-height: 1.6;
-}
-
-.ai-explanation li {
-  margin-bottom: 4px;
 }
