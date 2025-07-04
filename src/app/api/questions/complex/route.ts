@@ -58,10 +58,10 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // Transform the questions to include parsed correctAnswers (convert 1-based to 0-based)
+        // Transform the questions to include parsed correctAnswers
         const transformedQuestions = questions.map(question => ({
             ...question,
-            correctAnswers: JSON.parse(question.correctAnswers).map((answer: number) => answer - 1),
+            correctAnswers: JSON.parse(question.correctAnswers),
             keywords: question.keywords ? JSON.parse(question.keywords) : []
         }));
 

@@ -16,7 +16,8 @@
     "db:remove-duplicates": "tsx scripts/db-manager.ts remove-duplicates",
     "db:backup": "tsx scripts/db-manager.ts backup",
     "db:update": "tsx scripts/update-questions.ts",
-    "add-questions": "tsx scripts/add-questions.ts"
+    "add-questions": "tsx scripts/add-questions.ts",
+    "load-questions": "tsx scripts/load-questions.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.11.0",
