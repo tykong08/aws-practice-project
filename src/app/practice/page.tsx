@@ -223,7 +223,7 @@ export default function PracticePage() {
             <div className="min-h-screen bg-white">
                 <div className="container mx-auto px-4 py-8">
                     <div className="mb-8">
-                        <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-800">
+                        <Link href="/" className="nav-btn-secondary text-decoration-none">
                             <ArrowLeft className="h-4 w-4 mr-2" />
                             홈으로 돌아가기
                         </Link>
@@ -309,7 +309,7 @@ export default function PracticePage() {
             <div className="container mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-6">
-                    <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-800">
+                    <Link href="/" className="nav-btn-secondary text-decoration-none">
                         <ArrowLeft className="h-4 w-4 mr-2" />
                         홈으로 돌아가기
                     </Link>
@@ -412,11 +412,10 @@ export default function PracticePage() {
                             ) : (
                                 <div className="space-y-4 mt-6">
                                     <div className="flex gap-4">
-                                        <Button
+                                        <button
                                             onClick={generateExplanation}
                                             disabled={loadingExplanation}
-                                            variant="outline"
-                                            className="flex-1"
+                                            className={`ai-explanation-btn flex-1 ${loadingExplanation ? 'ai-explanation-loading' : ''}`}
                                         >
                                             {loadingExplanation ? (
                                                 <>
@@ -429,43 +428,39 @@ export default function PracticePage() {
                                                     AI 설명 보기
                                                 </>
                                             )}
-                                        </Button>
-                                        <Button onClick={nextQuestion} className="flex-1">
+                                        </button>
+                                        <button onClick={nextQuestion} className="nav-btn-primary flex-1">
                                             {currentQuestionIndex < questions.length - 1 ? '다음 문제' : '결과 보기'}
-                                        </Button>
+                                        </button>
                                     </div>
                                 </div>
                             )}
 
                             {/* Explanation */}
                             {showExplanation && currentQuestion.explanation && (
-                                <Card className="mt-6 border-blue-200 bg-blue-50">
-                                    <CardHeader>
-                                        <CardTitle className="text-lg text-blue-800">AI 설명</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="prose prose-sm max-w-none">
-                                            <div className="whitespace-pre-wrap text-gray-700">
-                                                {currentQuestion.explanation}
-                                            </div>
-                                            {currentQuestion.keywords && currentQuestion.keywords.length > 0 && (
-                                                <div className="mt-4">
-                                                    <h4 className="font-medium text-gray-900 mb-2">핵심 키워드</h4>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {currentQuestion.keywords.map((keyword, index) => (
-                                                            <span
-                                                                key={index}
-                                                                className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm"
-                                                            >
-                                                                {keyword}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
+                                <div className="ai-explanation mt-6">
+                                    <h3>상세 해설</h3>
+                                    <div className="prose prose-sm max-w-none">
+                                        <div className="whitespace-pre-wrap text-gray-700">
+                                            {currentQuestion.explanation}
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                        {currentQuestion.keywords && currentQuestion.keywords.length > 0 && (
+                                            <div className="mt-4">
+                                                <h4 className="font-medium text-gray-900 mb-2">핵심 키워드</h4>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {currentQuestion.keywords.map((keyword, index) => (
+                                                        <span
+                                                            key={index}
+                                                            className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm"
+                                                        >
+                                                            {keyword}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             )}
                         </CardContent>
                     </Card>

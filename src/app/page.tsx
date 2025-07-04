@@ -67,15 +67,13 @@ export default function Home() {
               <User className="h-5 w-5" />
               <span>{user.name}</span>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={handleLogout}
-              className="text-gray-700 border-gray-300"
+              className="nav-btn-secondary text-gray-700"
             >
               <LogOut className="h-4 w-4 mr-2" />
               로그아웃
-            </Button>
+            </button>
           </div>
         </header>
 
@@ -111,10 +109,8 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <Link href="/practice">
-                  <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                    문제 연습 시작하기
-                  </Button>
+                <Link href="/practice" className="nav-btn-primary w-full text-decoration-none">
+                  문제 연습 시작하기
                 </Link>
               </CardContent>
             </Card>
@@ -128,10 +124,8 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <Link href="/review">
-                  <Button size="lg" className="w-full bg-orange-600 hover:bg-orange-700 text-white">
-                    틀린 문제 복습하기
-                  </Button>
+                <Link href="/review" className="nav-btn w-full text-decoration-none" style={{ backgroundColor: '#ea580c' }}>
+                  틀린 문제 복습하기
                 </Link>
               </CardContent>
             </Card>
@@ -149,10 +143,8 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <Link href="/test">
-                  <Button size="lg" className="w-full bg-purple-600 hover:bg-purple-700 text-white">
-                    모의시험 시작하기
-                  </Button>
+                <Link href="/test" className="nav-btn w-full text-decoration-none" style={{ backgroundColor: '#9333ea' }}>
+                  모의시험 시작하기
                 </Link>
                 <p className="text-xs text-gray-500 mt-2">
                   실제 시험과 동일한 65문제 • 정답 즉시 확인 불가
