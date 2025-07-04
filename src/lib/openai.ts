@@ -24,19 +24,22 @@ export async function generateExplanation(question: string, options: string[], c
         const prompt = `
 다음은 AWS SAA-C03 시험 문제입니다:
 
-문제: ${question}
+문제:
+${question}
 
 선택지:
 ${options.map((option, index) => `${index + 1}. ${option}`).join('\n')}
 
-정답: ${correctAnswers.map(ans => ans + 1).join(', ')}번
+정답:
+${correctAnswers.map(ans => ans + 1).join(', ')}번
 
-이 문제에 대한 상세한 설명을 한국어로 제공해주세요. 다음 형식으로 답변해주세요:
+이 문제에 대한 상세한 해설을 한국어로 제공해주세요. 아래 형식에 맞춰주세요:
 
-1. 정답 선지가 맞는 이유에 대한 상세한 설명
-2. 각 오답 선지가 틀린 이유와 정답과의 차이점
+1. 정답 선지가 왜 올바른 선택인지에 대한 **서비스 특성 기반의 상세한 설명**
+2. 각 오답 선지가 왜 틀렸는지, **정답과 비교해 어떤 차이가 있는지**를 구체적으로 설명
+3. 추가로 관련된 AWS 서비스 개념이나 자주 나오는 실수 포인트가 있다면 알려주세요.
 
-설명은 명확하고 이해하기 쉽게 작성해주세요.
+※ 설명은 AWS 초급~중급 수험생도 이해할 수 있도록 명확하고 쉽게 작성해 주세요.
 `;
 
         const openai = getOpenAIClient();
