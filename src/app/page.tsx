@@ -26,9 +26,19 @@ export default function Home() {
     }
   }, [router]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    router.push('/login');
+  const handleLogout = async () => {
+    try {
+      // 서버에 로그아웃 요청 (JWT 쿠키 삭제)
+      await fetch('/api/auth/login', {
+        method: 'DELETE',
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // 로컬 스토리지도 정리
+      localStorage.removeItem('user');
+      router.push('/login');
+    }
   };
 
   if (!user) {
