@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
             data: {
                 questionId,
                 userId,
-                selectedAnswers: JSON.stringify(selectedAnswers.map((answer: number) => answer + 1)), // Convert 0-based to 1-based
+                selectedAnswers: JSON.stringify(selectedAnswers), // 0-based 인덱스 그대로 저장
                 isCorrect,
                 timeSpent: timeSpent || 0,
             },

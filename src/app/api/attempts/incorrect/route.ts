@@ -41,10 +41,10 @@ export async function GET(request: NextRequest) {
         // Transform the data to include parsed JSON fields
         const transformedAttempts = stillIncorrectAttempts.map(attempt => ({
             ...attempt,
-            selectedAnswers: JSON.parse(attempt.selectedAnswers).map((answer: number) => answer - 1), // UserAttempt은 1-based로 저장됨
+            selectedAnswers: JSON.parse(attempt.selectedAnswers), // 0-based 인덱스 그대로 사용
             question: {
                 ...attempt.question,
-                correctAnswers: JSON.parse(attempt.question.correctAnswers), // Question은 이미 0-based로 저장됨
+                correctAnswers: JSON.parse(attempt.question.correctAnswers), // 0-based 인덱스 그대로 사용
                 keywords: attempt.question.keywords ? JSON.parse(attempt.question.keywords) : []
             }
         }));

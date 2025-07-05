@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Brain, CheckCircle, XCircle, RefreshCw, Trash2, Calendar, List, ChevronDown, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Brain, CheckCircle, XCircle, RefreshCw, Trash2, Calendar, List, ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
 
 interface Question {
     id: string;
@@ -44,6 +44,7 @@ export default function ReviewPage() {
     const [loading, setLoading] = useState(true);
     const [expandedQuestions, setExpandedQuestions] = useState<Set<string>>(new Set());
     const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
+    const [expandedExplanations, setExpandedExplanations] = useState<Set<string>>(new Set());
     const [loadingExplanations, setLoadingExplanations] = useState<Set<string>>(new Set());
     const [groupByDate, setGroupByDate] = useState(true);
     const [clearingAttempts, setClearingAttempts] = useState(false);
@@ -73,7 +74,22 @@ export default function ReviewPage() {
             const response = await fetch(`/api/attempts/incorrect?userId=${user.id}`);
             if (response.ok) {
                 const data = await response.json();
-                setIncorrectAttempts(data);
+                const processedData = data.map((attempt: IncorrectAttempt) => {
+                    return {
+                        ...attempt,
+                        selectedAnswers: Array.isArray(attempt.selectedAnswers)
+                            ? attempt.selectedAnswers.map((ans: string | number) => typeof ans === 'string' ? parseInt(ans, 10) : ans)
+                            : [],
+                        question: attempt.question ? {
+                            ...attempt.question,
+                            correctAnswers: Array.isArray(attempt.question.correctAnswers)
+                                ? attempt.question.correctAnswers.map((ans: string | number) => typeof ans === 'string' ? parseInt(ans, 10) : ans)
+                                : []
+                        } : attempt.question
+                    };
+                });
+
+                setIncorrectAttempts(processedData);
             } else {
                 console.error('Failed to fetch incorrect attempts');
             }
@@ -102,6 +118,18 @@ export default function ReviewPage() {
 
     const toggleQuestion = (questionId: string) => {
         setExpandedQuestions(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(questionId)) {
+                newSet.delete(questionId);
+            } else {
+                newSet.add(questionId);
+            }
+            return newSet;
+        });
+    };
+
+    const toggleExplanation = (questionId: string) => {
+        setExpandedExplanations(prev => {
             const newSet = new Set(prev);
             if (newSet.has(questionId)) {
                 newSet.delete(questionId);
@@ -170,6 +198,8 @@ export default function ReviewPage() {
                         }
                         : item
                 ));
+                // 해설이 생성되면 자동으로 펼치기
+                setExpandedExplanations(prev => new Set([...prev, attempt.questionId]));
             } else {
                 alert('설명을 생성하는데 실패했습니다.');
             }
@@ -279,7 +309,14 @@ export default function ReviewPage() {
                             </span>
                         </div>
                     </div>
-                    <XCircle className="h-6 w-6 text-red-600 ml-4" />
+                    <div className="flex items-center gap-2 ml-4">
+                        <XCircle className="h-6 w-6 text-red-600" />
+                        {expandedQuestions.has(attempt.questionId) ? (
+                            <ChevronUp className="h-5 w-5 text-gray-400" />
+                        ) : (
+                            <ChevronDown className="h-5 w-5 text-gray-400" />
+                        )}
+                    </div>
                 </div>
                 <CardDescription className="text-left">
                     {attempt.question.question}
@@ -337,19 +374,35 @@ export default function ReviewPage() {
 
                     {/* Explanation */}
                     {attempt.question.explanation ? (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                            <h4 className="font-semibold text-blue-900 mb-2">💡 설명</h4>
-                            <p className="text-blue-800 whitespace-pre-wrap">{attempt.question.explanation}</p>
-                            {attempt.question.keywords && attempt.question.keywords.length > 0 && (
-                                <div className="mt-3">
-                                    <span className="text-sm font-medium text-blue-700">핵심 키워드: </span>
-                                    <div className="flex flex-wrap gap-1 mt-1">
-                                        {attempt.question.keywords.map((keyword, idx) => (
-                                            <span key={idx} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                                                {keyword}
-                                            </span>
-                                        ))}
-                                    </div>
+                        <div className="mb-4">
+                            <div
+                                className="flex items-center justify-between p-3 bg-blue-100 border border-blue-200 rounded-t-lg cursor-pointer hover:bg-blue-150 transition-colors"
+                                onClick={() => toggleExplanation(attempt.questionId)}
+                            >
+                                <h4 className="font-semibold text-blue-900 flex items-center">
+                                    설명
+                                </h4>
+                                {expandedExplanations.has(attempt.questionId) ? (
+                                    <ChevronUp className="h-5 w-5 text-blue-600" />
+                                ) : (
+                                    <ChevronDown className="h-5 w-5 text-blue-600" />
+                                )}
+                            </div>
+                            {expandedExplanations.has(attempt.questionId) && (
+                                <div className="bg-blue-50 border-x border-b border-blue-200 rounded-b-lg p-4">
+                                    <p className="text-blue-800 whitespace-pre-wrap">{attempt.question.explanation}</p>
+                                    {attempt.question.keywords && attempt.question.keywords.length > 0 && (
+                                        <div className="mt-3">
+                                            <span className="text-sm font-medium text-blue-700">핵심 키워드: </span>
+                                            <div className="flex flex-wrap gap-1 mt-1">
+                                                {attempt.question.keywords.map((keyword, idx) => (
+                                                    <span key={idx} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                                                        {keyword}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>

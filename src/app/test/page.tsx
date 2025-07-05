@@ -78,7 +78,7 @@ export default function TestPage() {
         if (timeExpired) {
             finishTest();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timeExpired]);
 
     // 시간 포맷팅 함수
@@ -125,7 +125,7 @@ export default function TestPage() {
         setAnswers(prev => prev.map(answer => {
             if (answer.questionId === currentQuestion.id) {
                 const maxSelections = currentQuestion.correctAnswers.length;
-                
+
                 if (checked) {
                     // 새로운 답안 선택
                     if (answer.selectedAnswers.length >= maxSelections) {
@@ -365,7 +365,7 @@ export default function TestPage() {
                                 {/* 선택 안내 메시지 */}
                                 <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                     <p className="text-sm text-blue-800">
-                                        <strong>{currentQuestion.correctAnswers.length}개의 정답</strong>을 선택하세요. 
+                                        <strong>{currentQuestion.correctAnswers.length}개의 정답</strong>을 선택하세요.
                                         {currentAnswer?.selectedAnswers.length || 0}/{currentQuestion.correctAnswers.length} 선택됨
                                     </p>
                                 </div>
@@ -386,7 +386,7 @@ export default function TestPage() {
                                                 className="text-gray-900 cursor-pointer flex-1"
                                             >
                                                 <span className="font-medium mr-2">
-                                                    {String.fromCharCode(65 + index)}.
+                                                    {index + 1}.
                                                 </span>
                                                 {option}
                                             </label>

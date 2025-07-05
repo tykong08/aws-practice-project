@@ -90,7 +90,7 @@ export default function PracticePage() {
 
         setSelectedAnswers(prev => {
             const maxSelections = currentQuestion?.correctAnswers.length || 1;
-            
+
             if (prev.includes(optionIndex)) {
                 // 이미 선택된 답안을 다시 클릭하면 선택 해제
                 return prev.filter(ans => ans !== optionIndex);
@@ -364,7 +364,7 @@ export default function PracticePage() {
                             {/* 선택 안내 메시지 */}
                             <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                 <p className="text-sm text-blue-800">
-                                    <strong>{currentQuestion.correctAnswers.length}개의 정답</strong>을 선택하세요. 
+                                    <strong>{currentQuestion.correctAnswers.length}개의 정답</strong>을 선택하세요.
                                     {selectedAnswers.length}/{currentQuestion.correctAnswers.length} 선택됨
                                 </p>
                             </div>
@@ -405,7 +405,7 @@ export default function PracticePage() {
                                 <Button
                                     onClick={submitAnswer}
                                     disabled={selectedAnswers.length === 0}
-                                    className="w-full mt-6"
+                                    className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                                 >
                                     답안 제출
                                 </Button>
@@ -415,7 +415,10 @@ export default function PracticePage() {
                                         <button
                                             onClick={generateExplanation}
                                             disabled={loadingExplanation}
-                                            className={`ai-explanation-btn flex-1 ${loadingExplanation ? 'ai-explanation-loading' : ''}`}
+                                            className={`flex-1 px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center ${loadingExplanation
+                                                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                                                    : 'bg-purple-600 hover:bg-purple-700 text-white'
+                                                }`}
                                         >
                                             {loadingExplanation ? (
                                                 <>
@@ -429,7 +432,10 @@ export default function PracticePage() {
                                                 </>
                                             )}
                                         </button>
-                                        <button onClick={nextQuestion} className="nav-btn-primary flex-1">
+                                        <button
+                                            onClick={nextQuestion}
+                                            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+                                        >
                                             {currentQuestionIndex < questions.length - 1 ? '다음 문제' : '결과 보기'}
                                         </button>
                                     </div>
