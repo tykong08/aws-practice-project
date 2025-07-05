@@ -38,13 +38,13 @@ export async function GET(request: NextRequest) {
         const stillIncorrectAttempts = Array.from(latestAttempts.values())
             .filter(attempt => !attempt.isCorrect);
 
-        // Transform the data to include parsed JSON fields (convert 1-based to 0-based)
+        // Transform the data to include parsed JSON fields
         const transformedAttempts = stillIncorrectAttempts.map(attempt => ({
             ...attempt,
-            selectedAnswers: JSON.parse(attempt.selectedAnswers).map((answer: number) => answer - 1),
+            selectedAnswers: JSON.parse(attempt.selectedAnswers).map((answer: number) => answer - 1), // UserAttempt은 1-based로 저장됨
             question: {
                 ...attempt.question,
-                correctAnswers: JSON.parse(attempt.question.correctAnswers).map((answer: number) => answer - 1),
+                correctAnswers: JSON.parse(attempt.question.correctAnswers), // Question은 이미 0-based로 저장됨
                 keywords: attempt.question.keywords ? JSON.parse(attempt.question.keywords) : []
             }
         }));
